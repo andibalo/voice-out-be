@@ -14,10 +14,11 @@ var instance *gorm.DB
 
 type Store struct {
 	logger *zap.Logger
+	userRepository
 }
 
 func New(cfg *config.AppConfig) *Store {
-	_ = InitDB(cfg)
+	db := InitDB(cfg)
 
 	return &Store{
 		logger: cfg.Logger(),
