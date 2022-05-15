@@ -2,7 +2,9 @@ package logger
 
 import (
 	"fmt"
+	"github.com/labstack/echo/v4"
 	"sync"
+	"voice-out-be/internal/constants"
 
 	"go.uber.org/zap"
 )
@@ -27,4 +29,16 @@ func NewMainLoggerSingleton() *zap.Logger {
 
 func GetMainLogger() *zap.Logger {
 	return MainLogger
+}
+
+func ContextLogger(c echo.Context) *zap.Logger {
+	logger := GetMainLogger()
+
+	ctxRqID := c.Request().Header.Get(constants.HeaderRequestID)
+
+	if ctxRqID != "" {
+		return logger.With(zap.String(constants.HeaderRequestID, ctxRqID))
+	}
+
+	return logger
 }

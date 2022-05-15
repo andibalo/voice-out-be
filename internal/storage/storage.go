@@ -56,8 +56,10 @@ func InitDB(cfg *config.AppConfig) *gorm.DB {
 
 type Storage interface {
 	CreateUser(in *dto.RegisterUser) (*model.User, error)
+	FindUserByEmail(email string) (*model.User, error)
 }
 
 type UserRepository interface {
 	SaveUser(user *model.User) error
+	GetUserByEmail(email string) (*model.User, error)
 }

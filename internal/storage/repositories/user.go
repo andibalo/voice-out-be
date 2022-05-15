@@ -26,3 +26,15 @@ func (u *UserRepository) SaveUser(user *model.User) error {
 
 	return nil
 }
+
+func (u *UserRepository) GetUserByEmail(email string) (*model.User, error) {
+	user := &model.User{}
+
+	err := u.db.Where("email = ?", email).First(user).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}

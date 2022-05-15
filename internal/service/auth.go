@@ -21,6 +21,16 @@ func NewAuthService(storage storage.Storage) *authService {
 
 func (a *authService) RegisterUser(registerUserReq *request.RegisterUserRequest) (response.Code, error) {
 
+	existingUser, err := a.storage.FindUserByEmail(registerUserReq.Email)
+
+	if err != nil {
+		return response.ServerError, err
+	}
+
+	if existingUser != nil {
+		return response.BadRequest, err
+	}
+
 	hashedPassword, err := util.HashPassword(registerUserReq.Password)
 
 	if err != nil {

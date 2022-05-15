@@ -7,3 +7,7 @@ const (
 	AuthAPIPath     = "/auth"
 	RegisterAPIPath = "/register"
 )
+
+const (
+	HeaderRequestID string = "X-Request-ID"
+)
