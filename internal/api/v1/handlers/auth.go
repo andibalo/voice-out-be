@@ -5,27 +5,41 @@ import (
 	"net/http"
 	"voice-out-be/internal/constants"
 	"voice-out-be/internal/request"
+	"voice-out-be/internal/response"
+	"voice-out-be/internal/service"
 )
 
-type Auth struct{}
+type Auth struct {
+	authService service.AuthService
+}
 
-func NewAuthHandler() *Auth {
+func NewAuthHandler(authService service.AuthService) *Auth {
 
-	return &Auth{}
+	return &Auth{
+		authService: authService,
+	}
 }
 
 func (a *Auth) AddRoutes(e *echo.Echo) {
 	r := e.Group(constants.V1BasePath + constants.AuthAPIPath)
 
-	r.POST(constants.RegisterAPIPath, a.register)
+	r.POST(constants.RegisterAPIPath, a.registerUser)
 }
 
-func (a *Auth) register(c echo.Context) error {
-	user := new(request.RegisterUserRequest)
+func (a *Auth) registerUser(c echo.Context) error {
+	registerUserReq := &request.RegisterUserRequest{}
 
-	if err := c.Bind(user); err != nil {
+	if err := c.Bind(registerUserReq); err != nil {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, user)
+	code, err := a.authService.RegisterUser(registerUserReq)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "error")
+	}
+
+	resp := response.NewResponse(code, "")
+
+	return c.JSON(http.StatusOK, resp)
 }

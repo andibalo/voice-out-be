@@ -4,6 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"voice-out-be/internal/api/v1/handlers"
 	"voice-out-be/internal/config"
+	"voice-out-be/internal/service"
 	"voice-out-be/internal/storage"
 )
 
@@ -15,9 +16,11 @@ func NewServer(cfg *config.AppConfig) *Server {
 
 	e := echo.New()
 
-	storage.New(cfg)
+	store := storage.New(cfg)
 
-	authHandler := handlers.NewAuthHandler()
+	authService := service.NewAuthService(store)
+
+	authHandler := handlers.NewAuthHandler(authService)
 
 	registerHandlers(e, &handlers.HealthCheck{}, authHandler)
 
