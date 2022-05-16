@@ -13,3 +13,7 @@ func NewResponse(code Code, data interface{}) *Wrapper {
 		Data:         data,
 	}
 }
+
+func (w *Wrapper) SetResponseMessage(customMessage string) {
+	w.Message = customMessage
+}

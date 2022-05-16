@@ -7,6 +7,7 @@ import (
 	"voice-out-be/internal/request"
 	"voice-out-be/internal/response"
 	"voice-out-be/internal/service"
+	"voice-out-be/internal/voerrors"
 )
 
 type Auth struct {
@@ -36,10 +37,29 @@ func (a *Auth) registerUser(c echo.Context) error {
 	code, err := a.authService.RegisterUser(registerUserReq)
 
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, "error")
+		a.failedAuthResponse(c, code, err)
 	}
 
-	resp := response.NewResponse(code, "")
+	token, err := a.authService.GenerateJWT(registerUserReq.Username, registerUserReq.Email)
+
+	if err != nil {
+		a.failedAuthResponse(c, "", err)
+	}
+
+	resp := response.NewResponse(code, token)
 
 	return c.JSON(http.StatusOK, resp)
+}
+
+func (a *Auth) failedAuthResponse(c echo.Context, code response.Code, err error) {
+	if code == "" {
+		code = voerrors.MapErrorsToCode(err)
+	}
+
+	resp := response.Wrapper{
+		ResponseCode: code,
+		Message:      code.GetMessage(),
+	}
+
+	c.JSON(voerrors.MapErrorsToStatusCode(err), resp)
 }
