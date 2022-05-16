@@ -76,6 +76,8 @@ func (a *authService) RegisterUser(registerUserReq *request.RegisterUserRequest)
 }
 
 func (a *authService) GenerateJWT(name string, email string) (jwtToken string, err error) {
+	a.config.Logger().Info("GenerateJWT: generating jwt token")
+
 	claims := jwtClaims{
 		Name:  name,
 		Email: email,
@@ -84,8 +86,6 @@ func (a *authService) GenerateJWT(name string, email string) (jwtToken string, e
 			ExpiresAt: time.Now().Add(constants.JWT_EXPIRATION_DURATION).Unix(),
 		},
 	}
-
-	a.config.Logger().Info("GenerateJWT: generating jwt token", zap.Error(err))
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 

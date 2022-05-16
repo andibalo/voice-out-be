@@ -65,6 +65,7 @@ func (a *Auth) failedAuthResponse(c echo.Context, code response.Code, err error,
 
 	resp := response.Wrapper{
 		ResponseCode: code,
+		Status:       code.GetStatus(),
 		Message:      code.GetMessage(),
 	}
 
