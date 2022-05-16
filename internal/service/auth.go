@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"github.com/golang-jwt/jwt"
 	"go.uber.org/zap"
 	"time"
@@ -38,8 +39,10 @@ func (a *authService) RegisterUser(registerUserReq *request.RegisterUserRequest)
 	existingUser, err := a.storage.FindUserByEmail(registerUserReq.Email)
 
 	if err != nil {
-		a.config.Logger().Error("RegisterUser: error finding user by email", zap.Error(err))
-		return response.ServerError, err
+		if !errors.Is(err, voerrors.ErrNotFound) {
+			a.config.Logger().Error("RegisterUser: error finding user by email", zap.Error(err))
+			return response.ServerError, err
+		}
 	}
 
 	if existingUser != nil {

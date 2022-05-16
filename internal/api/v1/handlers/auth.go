@@ -34,16 +34,23 @@ func (a *Auth) registerUser(c echo.Context) error {
 		return err
 	}
 
+	err := registerUserReq.Validate()
+
+	if err != nil {
+		validationErrorMessage := err.Error()
+		return a.failedAuthResponse(c, response.BadRequest, err, validationErrorMessage)
+	}
+
 	code, err := a.authService.RegisterUser(registerUserReq)
 
 	if err != nil {
-		a.failedAuthResponse(c, code, err)
+		return a.failedAuthResponse(c, code, err, "")
 	}
 
 	token, err := a.authService.GenerateJWT(registerUserReq.Username, registerUserReq.Email)
 
 	if err != nil {
-		a.failedAuthResponse(c, "", err)
+		return a.failedAuthResponse(c, "", err, "")
 	}
 
 	resp := response.NewResponse(code, token)
@@ -51,7 +58,7 @@ func (a *Auth) registerUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, resp)
 }
 
-func (a *Auth) failedAuthResponse(c echo.Context, code response.Code, err error) {
+func (a *Auth) failedAuthResponse(c echo.Context, code response.Code, err error, errorMsg string) error {
 	if code == "" {
 		code = voerrors.MapErrorsToCode(err)
 	}
@@ -61,5 +68,9 @@ func (a *Auth) failedAuthResponse(c echo.Context, code response.Code, err error)
 		Message:      code.GetMessage(),
 	}
 
-	c.JSON(voerrors.MapErrorsToStatusCode(err), resp)
+	if errorMsg != "" {
+		resp.SetResponseMessage(errorMsg)
+	}
+
+	return c.JSON(voerrors.MapErrorsToStatusCode(err), resp)
 }

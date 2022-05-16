@@ -13,7 +13,7 @@ var (
 	ErrInvalidParam     = errors.New("invalid input param(s)")
 	ErrUnauthorized     = errors.New("authorization missing or bad")
 	ErrPermissionDenied = errors.New("permission denied")
-	ErrNotFound         = errors.New("not found")
+	ErrNotFound         = errors.New("record not found")
 	ErrDuplicateUser    = errors.New("user already exists")
 	ErrDuplicateRequest = errors.New("duplicate request")
 	ErrTimeout          = errors.New("timeout")
