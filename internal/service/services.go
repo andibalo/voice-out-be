@@ -1,13 +1,15 @@
 package service
 
 import (
-	"go.uber.org/zap"
 	"voice-out-be/internal/request"
 	"voice-out-be/internal/response"
+
+	"go.uber.org/zap"
 )
 
 type AuthService interface {
 	RegisterUser(registerUserReq *request.RegisterUserRequest) (response.Code, error)
+	Login(loginReq *request.LoginRequest) (code response.Code, token string, err error)
 	GenerateJWT(name string, email string) (jwtToken string, err error)
 }
 

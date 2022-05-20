@@ -2,8 +2,6 @@ package service
 
 import (
 	"errors"
-	"github.com/golang-jwt/jwt"
-	"go.uber.org/zap"
 	"time"
 	"voice-out-be/internal/constants"
 	"voice-out-be/internal/dto"
@@ -12,6 +10,9 @@ import (
 	"voice-out-be/internal/storage"
 	"voice-out-be/internal/util"
 	"voice-out-be/internal/voerrors"
+
+	"github.com/golang-jwt/jwt"
+	"go.uber.org/zap"
 )
 
 type authService struct {
@@ -73,6 +74,40 @@ func (a *authService) RegisterUser(registerUserReq *request.RegisterUserRequest)
 	}
 
 	return response.Success, nil
+}
+
+func (a *authService) Login(loginReq *request.LoginRequest) (code response.Code, token string, err error) {
+
+	a.config.Logger().Info("Login:  finding user by email")
+	existingUser, err := a.storage.FindUserByEmail(loginReq.Email)
+
+	if err != nil {
+		if !errors.Is(err, voerrors.ErrNotFound) {
+			a.config.Logger().Error("Login: error finding user by email", zap.Error(err))
+			return response.ServerError, "", err
+		}
+	}
+
+	if existingUser == nil {
+		a.config.Logger().Error("Login: email does not exist", zap.Error(err))
+		return response.NotFound, "", voerrors.ErrNotFound
+	}
+
+	a.config.Logger().Info("Login: checking password hash")
+	isPasswordMatch := util.CheckPasswordHash(loginReq.Password, existingUser.Password)
+
+	if !isPasswordMatch {
+		a.config.Logger().Error("Login: incorrect password", zap.Error(err))
+		return response.BadRequest, "", voerrors.ErrBadRequest
+	}
+
+	token, err = a.GenerateJWT(existingUser.Username, existingUser.Email)
+
+	if err != nil {
+		return response.ServerError, "", err
+	}
+
+	return response.Success, token, nil
 }
 
 func (a *authService) GenerateJWT(name string, email string) (jwtToken string, err error) {

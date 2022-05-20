@@ -1,13 +1,14 @@
 package handlers
 
 import (
-	"github.com/labstack/echo/v4"
 	"net/http"
 	"voice-out-be/internal/constants"
 	"voice-out-be/internal/request"
 	"voice-out-be/internal/response"
 	"voice-out-be/internal/service"
 	"voice-out-be/internal/voerrors"
+
+	"github.com/labstack/echo/v4"
 )
 
 type Auth struct {
@@ -25,6 +26,7 @@ func (a *Auth) AddRoutes(e *echo.Echo) {
 	r := e.Group(constants.V1BasePath + constants.AuthAPIPath)
 
 	r.POST(constants.RegisterAPIPath, a.registerUser)
+	r.POST(constants.LoginAPIPath, a.login)
 }
 
 func (a *Auth) registerUser(c echo.Context) error {
@@ -51,6 +53,31 @@ func (a *Auth) registerUser(c echo.Context) error {
 
 	if err != nil {
 		return a.failedAuthResponse(c, "", err, "")
+	}
+
+	resp := response.NewResponse(code, token)
+
+	return c.JSON(http.StatusOK, resp)
+}
+
+func (a *Auth) login(c echo.Context) error {
+	loginReq := &request.LoginRequest{}
+
+	if err := c.Bind(loginReq); err != nil {
+		return err
+	}
+
+	err := loginReq.Validate()
+
+	if err != nil {
+		validationErrorMessage := err.Error()
+		return a.failedAuthResponse(c, response.BadRequest, err, validationErrorMessage)
+	}
+
+	code, token, err := a.authService.Login(loginReq)
+
+	if err != nil {
+		return a.failedAuthResponse(c, code, err, "")
 	}
 
 	resp := response.NewResponse(code, token)

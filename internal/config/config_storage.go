@@ -19,7 +19,7 @@ func LoadDBConfig() *DBConfig {
 		DbPassword: "local",
 		DbName:     "voiceout",
 		Host:       "0.0.0.0",
-		Port:       "5433",
+		Port:       "5432",
 	}
 }
 

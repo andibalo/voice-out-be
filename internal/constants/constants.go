@@ -13,6 +13,7 @@ const (
 	HealthAPIPath   = "/health"
 	AuthAPIPath     = "/auth"
 	RegisterAPIPath = "/register"
+	LoginAPIPath    = "/login"
 )
 
 const (

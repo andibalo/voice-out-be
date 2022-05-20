@@ -9,6 +9,7 @@ const (
 	Pending           Code = "VOT0050"
 	InvalidInputParam Code = "VOT0032"
 	DuplicateUser     Code = "VOT0033"
+	NotFound          Code = "VOT0034"
 
 	Unauthorized   Code = "VOT0502"
 	Forbidden      Code = "VOT0503"
@@ -27,6 +28,7 @@ var codeMap = map[Code]string{
 	ServerError:       "Internal Server Error",
 	InvalidInputParam: "Other invalid argument",
 	DuplicateUser:     "duplicate user",
+	NotFound:          "Not found",
 }
 
 func (c Code) GetStatus() string {
