@@ -30,7 +30,7 @@ func (h *Post) AddRoutes(e *echo.Echo) {
 	r.Use(middleware.JWT([]byte("TEST")))
 	r.POST("/", h.createPost)
 	r.GET("/", h.getAllPosts)
-	r.GET("/user/:id", h.getAllPostsByUserID)
+	r.GET(constants.FetchPostsByUserIDAPIPath, h.getAllPostsByUserID)
 }
 
 func (h *Post) createPost(c echo.Context) error {

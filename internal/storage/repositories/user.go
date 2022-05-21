@@ -1,8 +1,9 @@
 package repositories
 
 import (
-	"gorm.io/gorm"
 	"voice-out-be/internal/model"
+
+	"gorm.io/gorm"
 )
 
 type UserRepository struct {
@@ -31,6 +32,18 @@ func (u *UserRepository) GetUserByEmail(email string) (*model.User, error) {
 	user := &model.User{}
 
 	err := u.db.Where("email = ?", email).First(user).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func (u *UserRepository) GetUserByID(userID string) (*model.User, error) {
+	user := &model.User{}
+
+	err := u.db.Where("id = ?", userID).First(user).Error
 
 	if err != nil {
 		return nil, err

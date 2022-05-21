@@ -61,6 +61,7 @@ func InitDB(cfg *config.AppConfig) *gorm.DB {
 type Storage interface {
 	CreateUser(in *dto.RegisterUser) (*model.User, error)
 	FindUserByEmail(email string) (*model.User, error)
+	FindUserByID(userID string) (*model.User, error)
 	CreatePost(in *dto.CreatePost) (*model.Post, error)
 	FindAllPosts() (*[]model.Post, error)
 	FindAllPostsByUserID(userID string) (*[]model.Post, error)
@@ -69,6 +70,7 @@ type Storage interface {
 type UserRepository interface {
 	SaveUser(user *model.User) error
 	GetUserByEmail(email string) (*model.User, error)
+	GetUserByID(userID string) (*model.User, error)
 }
 
 type PostRepository interface {

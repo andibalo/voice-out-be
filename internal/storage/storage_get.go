@@ -24,6 +24,22 @@ func (s *Store) FindUserByEmail(email string) (*model.User, error) {
 	return user, nil
 }
 
+func (s *Store) FindUserByID(userID string) (*model.User, error) {
+
+	user, err := s.userRepository.GetUserByID(userID)
+
+	if err != nil {
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, voerrors.ErrNotFound
+		}
+
+		return nil, err
+	}
+
+	return user, nil
+}
+
 func (s *Store) FindAllPosts() (*[]model.Post, error) {
 
 	posts, err := s.postRepository.GetAllPosts()

@@ -19,3 +19,11 @@ func NewResponse(code Code, data interface{}) *Wrapper {
 func (w *Wrapper) SetResponseMessage(customMessage string) {
 	w.Message = customMessage
 }
+
+type FetchUserResponse struct {
+	ID        string `json:"id"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Username  string `json:"username"`
+	Email     string `json:"email"`
+}

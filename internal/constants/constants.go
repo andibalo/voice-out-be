@@ -8,13 +8,16 @@ const (
 )
 
 const (
-	BasePath        = "/api"
-	V1BasePath      = "/api/v1"
-	HealthAPIPath   = "/health"
-	PostAPIPath     = "/post"
-	AuthAPIPath     = "/auth"
-	RegisterAPIPath = "/register"
-	LoginAPIPath    = "/login"
+	BasePath                  = "/api"
+	V1BasePath                = "/api/v1"
+	HealthAPIPath             = "/health"
+	PostAPIPath               = "/post"
+	AuthAPIPath               = "/auth"
+	UserAPIPath               = "/user"
+	RegisterAPIPath           = "/register"
+	LoginAPIPath              = "/login"
+	FetchPostsByUserIDAPIPath = "/user/:id"
+	FetchCurrentUserAPIPath   = "/me"
 )
 
 const (

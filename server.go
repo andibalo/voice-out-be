@@ -30,11 +30,13 @@ func NewServer(cfg *config.AppConfig) *Server {
 
 	authService := service.NewAuthService(cfg, store)
 	postService := service.NewPostService(cfg, store)
+	userService := service.NewUserService(cfg, store)
 
 	authHandler := handlers.NewAuthHandler(authService)
 	postHandler := handlers.NewPostHandler(postService)
+	userHandler := handlers.NewUserHandler(userService)
 
-	registerHandlers(e, &handlers.HealthCheck{}, authHandler, postHandler)
+	registerHandlers(e, &handlers.HealthCheck{}, authHandler, postHandler, userHandler)
 
 	return &Server{
 		echo: e,

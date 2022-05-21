@@ -20,6 +20,10 @@ type PostService interface {
 	FetchAllPostsByUserID(userID string) (code response.Code, posts *[]model.Post, err error)
 }
 
+type UserService interface {
+	FetchCurrentUser(userID string) (response.Code, *response.FetchUserResponse, error)
+}
+
 type Config interface {
 	Logger() *zap.Logger
 }
