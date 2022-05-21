@@ -40,3 +40,16 @@ func (p *PostRepository) GetAllPosts() (*[]model.Post, error) {
 
 	return posts, nil
 }
+
+func (p *PostRepository) GetAllPostsByUserID(userID string) (*[]model.Post, error) {
+
+	var posts *[]model.Post
+
+	err := p.db.Where("user_id = ?", userID).Find(&posts).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}

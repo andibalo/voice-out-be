@@ -34,3 +34,13 @@ func (s *Store) FindAllPosts() (*[]model.Post, error) {
 
 	return posts, nil
 }
+
+func (s *Store) FindAllPostsByUserID(userID string) (*[]model.Post, error) {
+
+	posts, err := s.postRepository.GetAllPostsByUserID(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}

@@ -17,6 +17,7 @@ type AuthService interface {
 type PostService interface {
 	CreatePost(createPostReq *request.CreatePostRequest, userID string) (code response.Code, err error)
 	FetchAllPosts() (code response.Code, posts *[]model.Post, err error)
+	FetchAllPostsByUserID(userID string) (code response.Code, posts *[]model.Post, err error)
 }
 
 type Config interface {

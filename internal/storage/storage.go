@@ -63,6 +63,7 @@ type Storage interface {
 	FindUserByEmail(email string) (*model.User, error)
 	CreatePost(in *dto.CreatePost) (*model.Post, error)
 	FindAllPosts() (*[]model.Post, error)
+	FindAllPostsByUserID(userID string) (*[]model.Post, error)
 }
 
 type UserRepository interface {
@@ -73,4 +74,5 @@ type UserRepository interface {
 type PostRepository interface {
 	SavePost(post *model.Post) error
 	GetAllPosts() (*[]model.Post, error)
+	GetAllPostsByUserID(userID string) (*[]model.Post, error)
 }

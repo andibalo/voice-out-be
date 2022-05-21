@@ -57,3 +57,16 @@ func (s *postService) FetchAllPosts() (code response.Code, posts *[]model.Post, 
 
 	return response.Success, posts, nil
 }
+
+func (s *postService) FetchAllPostsByUserID(userID string) (code response.Code, posts *[]model.Post, err error) {
+
+	s.config.Logger().Info("FetchAllPostsByUserID: fetching posts")
+
+	posts, err = s.storage.FindAllPostsByUserID(userID)
+	if err != nil {
+		s.config.Logger().Error("FetchAllPostsByUserID: error fetching posts", zap.Error(err))
+		return response.ServerError, nil, err
+	}
+
+	return response.Success, posts, nil
+}
