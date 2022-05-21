@@ -23,3 +23,21 @@ func (s *Store) CreateUser(in *dto.RegisterUser) (*model.User, error) {
 
 	return user, nil
 }
+
+func (s *Store) CreatePost(in *dto.CreatePost) (*model.Post, error) {
+
+	post := &model.Post{
+		From:   in.From,
+		To:     in.To,
+		Body:   in.Body,
+		UserID: in.UserID,
+	}
+
+	err := s.postRepository.SavePost(post)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return post, nil
+}

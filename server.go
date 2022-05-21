@@ -1,13 +1,14 @@
 package voiceout
 
 import (
-	"github.com/google/uuid"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	"voice-out-be/internal/api/v1/handlers"
 	"voice-out-be/internal/config"
 	"voice-out-be/internal/service"
 	"voice-out-be/internal/storage"
+
+	"github.com/google/uuid"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type Server struct {
@@ -28,10 +29,12 @@ func NewServer(cfg *config.AppConfig) *Server {
 	store := storage.New(cfg)
 
 	authService := service.NewAuthService(cfg, store)
+	postService := service.NewPostService(cfg, store)
 
 	authHandler := handlers.NewAuthHandler(authService)
+	postHandler := handlers.NewPostHandler(postService)
 
-	registerHandlers(e, &handlers.HealthCheck{}, authHandler)
+	registerHandlers(e, &handlers.HealthCheck{}, authHandler, postHandler)
 
 	return &Server{
 		echo: e,

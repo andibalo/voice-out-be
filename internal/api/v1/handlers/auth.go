@@ -22,14 +22,14 @@ func NewAuthHandler(authService service.AuthService) *Auth {
 	}
 }
 
-func (a *Auth) AddRoutes(e *echo.Echo) {
+func (h *Auth) AddRoutes(e *echo.Echo) {
 	r := e.Group(constants.V1BasePath + constants.AuthAPIPath)
 
-	r.POST(constants.RegisterAPIPath, a.registerUser)
-	r.POST(constants.LoginAPIPath, a.login)
+	r.POST(constants.RegisterAPIPath, h.registerUser)
+	r.POST(constants.LoginAPIPath, h.login)
 }
 
-func (a *Auth) registerUser(c echo.Context) error {
+func (h *Auth) registerUser(c echo.Context) error {
 	registerUserReq := &request.RegisterUserRequest{}
 
 	if err := c.Bind(registerUserReq); err != nil {
@@ -40,19 +40,19 @@ func (a *Auth) registerUser(c echo.Context) error {
 
 	if err != nil {
 		validationErrorMessage := err.Error()
-		return a.failedAuthResponse(c, response.BadRequest, err, validationErrorMessage)
+		return h.failedAuthResponse(c, response.BadRequest, err, validationErrorMessage)
 	}
 
-	code, err := a.authService.RegisterUser(registerUserReq)
+	code, err := h.authService.RegisterUser(registerUserReq)
 
 	if err != nil {
-		return a.failedAuthResponse(c, code, err, "")
+		return h.failedAuthResponse(c, code, err, "")
 	}
 
-	token, err := a.authService.GenerateJWT(registerUserReq.Username, registerUserReq.Email)
+	token, err := h.authService.GenerateJWT(registerUserReq.Username, registerUserReq.Email)
 
 	if err != nil {
-		return a.failedAuthResponse(c, "", err, "")
+		return h.failedAuthResponse(c, "", err, "")
 	}
 
 	resp := response.NewResponse(code, token)
@@ -60,7 +60,7 @@ func (a *Auth) registerUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, resp)
 }
 
-func (a *Auth) login(c echo.Context) error {
+func (h *Auth) login(c echo.Context) error {
 	loginReq := &request.LoginRequest{}
 
 	if err := c.Bind(loginReq); err != nil {
@@ -71,13 +71,13 @@ func (a *Auth) login(c echo.Context) error {
 
 	if err != nil {
 		validationErrorMessage := err.Error()
-		return a.failedAuthResponse(c, response.BadRequest, err, validationErrorMessage)
+		return h.failedAuthResponse(c, response.BadRequest, err, validationErrorMessage)
 	}
 
-	code, token, err := a.authService.Login(loginReq)
+	code, token, err := h.authService.Login(loginReq)
 
 	if err != nil {
-		return a.failedAuthResponse(c, code, err, "")
+		return h.failedAuthResponse(c, code, err, "")
 	}
 
 	resp := response.NewResponse(code, token)
@@ -85,7 +85,7 @@ func (a *Auth) login(c echo.Context) error {
 	return c.JSON(http.StatusOK, resp)
 }
 
-func (a *Auth) failedAuthResponse(c echo.Context, code response.Code, err error, errorMsg string) error {
+func (h *Auth) failedAuthResponse(c echo.Context, code response.Code, err error, errorMsg string) error {
 	if code == "" {
 		code = voerrors.MapErrorsToCode(err)
 	}

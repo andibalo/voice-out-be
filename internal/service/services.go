@@ -13,6 +13,10 @@ type AuthService interface {
 	GenerateJWT(name string, email string) (jwtToken string, err error)
 }
 
+type PostService interface {
+	CreatePost(createPostReq *request.CreatePostRequest) (code response.Code, err error)
+}
+
 type Config interface {
 	Logger() *zap.Logger
 }

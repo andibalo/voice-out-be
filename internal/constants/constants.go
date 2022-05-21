@@ -11,6 +11,7 @@ const (
 	BasePath        = "/api"
 	V1BasePath      = "/api/v1"
 	HealthAPIPath   = "/health"
+	PostAPIPath     = "/post"
 	AuthAPIPath     = "/auth"
 	RegisterAPIPath = "/register"
 	LoginAPIPath    = "/login"
