@@ -28,7 +28,7 @@ func New(cfg *config.AppConfig) *Store {
 	migrateDB(db)
 
 	userRepo := repositories.NewUserRepository(db)
-	postRepo := repositories.NewPostRepositroy(db)
+	postRepo := repositories.NewPostRepository(db)
 
 	return &Store{
 		logger:         cfg.Logger(),
