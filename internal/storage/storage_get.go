@@ -2,9 +2,10 @@ package storage
 
 import (
 	"errors"
-	"gorm.io/gorm"
 	"voice-out-be/internal/model"
 	"voice-out-be/internal/voerrors"
+
+	"gorm.io/gorm"
 )
 
 func (s *Store) FindUserByEmail(email string) (*model.User, error) {
@@ -21,4 +22,15 @@ func (s *Store) FindUserByEmail(email string) (*model.User, error) {
 	}
 
 	return user, nil
+}
+
+func (s *Store) FindAllPosts() (*[]model.Post, error) {
+
+	posts, err := s.postRepository.GetAllPosts()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return posts, nil
 }

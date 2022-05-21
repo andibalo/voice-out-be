@@ -8,13 +8,13 @@ import (
 )
 
 type Post struct {
-	ID        string `gorm:"primaryKey"`
-	From      string `gorm:"not null;type:varchar(64)"`
-	To        string `gorm:"not null;type:varchar(64)"`
-	Body      string `gorm:"not null;type:varchar(64)"`
-	UserID    string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        string    `json:"id" gorm:"primaryKey"`
+	From      string    `json:"from"  gorm:"not null;type:varchar(64)"`
+	To        string    `json:"to"  gorm:"not null;type:varchar(64)"`
+	Body      string    `json:"body" gorm:"not null;type:varchar(64)"`
+	UserID    string    `json:"userId"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 func (p *Post) BeforeCreate(tx *gorm.DB) error {

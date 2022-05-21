@@ -62,6 +62,7 @@ type Storage interface {
 	CreateUser(in *dto.RegisterUser) (*model.User, error)
 	FindUserByEmail(email string) (*model.User, error)
 	CreatePost(in *dto.CreatePost) (*model.Post, error)
+	FindAllPosts() (*[]model.Post, error)
 }
 
 type UserRepository interface {
@@ -71,4 +72,5 @@ type UserRepository interface {
 
 type PostRepository interface {
 	SavePost(post *model.Post) error
+	GetAllPosts() (*[]model.Post, error)
 }

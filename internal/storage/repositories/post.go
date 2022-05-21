@@ -27,3 +27,16 @@ func (p *PostRepository) SavePost(post *model.Post) error {
 
 	return nil
 }
+
+func (p *PostRepository) GetAllPosts() (*[]model.Post, error) {
+
+	var posts *[]model.Post
+
+	err := p.db.Find(&posts).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}

@@ -2,6 +2,7 @@ package service
 
 import (
 	"voice-out-be/internal/dto"
+	"voice-out-be/internal/model"
 	"voice-out-be/internal/request"
 	"voice-out-be/internal/response"
 	"voice-out-be/internal/storage"
@@ -41,4 +42,18 @@ func (s *postService) CreatePost(createPostReq *request.CreatePostRequest, userI
 	}
 
 	return response.Success, nil
+}
+
+func (s *postService) FetchAllPosts() (code response.Code, posts *[]model.Post, err error) {
+
+	s.config.Logger().Info("FetchPosts: fetching all posts")
+
+	posts, err = s.storage.FindAllPosts()
+
+	if err != nil {
+		s.config.Logger().Error("FetchPosts: error fetching all posts", zap.Error(err))
+		return response.ServerError, nil, err
+	}
+
+	return response.Success, posts, nil
 }

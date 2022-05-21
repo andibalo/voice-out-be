@@ -1,6 +1,7 @@
 package service
 
 import (
+	"voice-out-be/internal/model"
 	"voice-out-be/internal/request"
 	"voice-out-be/internal/response"
 
@@ -15,6 +16,7 @@ type AuthService interface {
 
 type PostService interface {
 	CreatePost(createPostReq *request.CreatePostRequest, userID string) (code response.Code, err error)
+	FetchAllPosts() (code response.Code, posts *[]model.Post, err error)
 }
 
 type Config interface {

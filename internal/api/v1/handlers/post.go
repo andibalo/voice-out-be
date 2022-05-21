@@ -29,6 +29,7 @@ func (h *Post) AddRoutes(e *echo.Echo) {
 
 	r.Use(middleware.JWT([]byte("TEST")))
 	r.POST("/", h.createPost)
+	r.GET("/", h.getAllPosts)
 }
 
 func (h *Post) createPost(c echo.Context) error {
@@ -57,7 +58,22 @@ func (h *Post) createPost(c echo.Context) error {
 		return h.failedPostResponse(c, code, err, "")
 	}
 
-	return c.JSON(http.StatusOK, nil)
+	resp := response.NewResponse(code, nil)
+
+	return c.JSON(http.StatusOK, resp)
+}
+
+func (h *Post) getAllPosts(c echo.Context) error {
+
+	code, posts, err := h.postService.FetchAllPosts()
+
+	if err != nil {
+		return h.failedPostResponse(c, code, err, "")
+	}
+
+	resp := response.NewResponse(code, posts)
+
+	return c.JSON(http.StatusOK, resp)
 }
 
 func (h *Post) failedPostResponse(c echo.Context, code response.Code, err error, errorMsg string) error {
