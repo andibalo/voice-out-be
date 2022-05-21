@@ -22,7 +22,7 @@ func NewPostService(config Config, store storage.Storage) *postService {
 	}
 }
 
-func (s *postService) CreatePost(createPostReq *request.CreatePostRequest) (code response.Code, err error) {
+func (s *postService) CreatePost(createPostReq *request.CreatePostRequest, userID string) (code response.Code, err error) {
 
 	s.config.Logger().Info("CreatePost: creating post")
 
@@ -30,7 +30,7 @@ func (s *postService) CreatePost(createPostReq *request.CreatePostRequest) (code
 		From:   createPostReq.From,
 		To:     createPostReq.To,
 		Body:   createPostReq.Body,
-		UserID: "98c8bc37-3eaa-4cd9-b23e-d6ea3632fe62",
+		UserID: userID,
 	}
 
 	_, err = s.storage.CreatePost(postIn)

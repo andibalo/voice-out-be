@@ -43,16 +43,10 @@ func (h *Auth) registerUser(c echo.Context) error {
 		return h.failedAuthResponse(c, response.BadRequest, err, validationErrorMessage)
 	}
 
-	code, err := h.authService.RegisterUser(registerUserReq)
+	code, token, err := h.authService.RegisterUser(registerUserReq)
 
 	if err != nil {
 		return h.failedAuthResponse(c, code, err, "")
-	}
-
-	token, err := h.authService.GenerateJWT(registerUserReq.Username, registerUserReq.Email)
-
-	if err != nil {
-		return h.failedAuthResponse(c, "", err, "")
 	}
 
 	resp := response.NewResponse(code, token)

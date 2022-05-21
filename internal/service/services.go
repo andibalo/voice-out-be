@@ -8,13 +8,13 @@ import (
 )
 
 type AuthService interface {
-	RegisterUser(registerUserReq *request.RegisterUserRequest) (response.Code, error)
+	RegisterUser(registerUserReq *request.RegisterUserRequest) (code response.Code, token string, err error)
 	Login(loginReq *request.LoginRequest) (code response.Code, token string, err error)
-	GenerateJWT(name string, email string) (jwtToken string, err error)
+	GenerateJWT(name string, email string, userID string) (jwtToken string, err error)
 }
 
 type PostService interface {
-	CreatePost(createPostReq *request.CreatePostRequest) (code response.Code, err error)
+	CreatePost(createPostReq *request.CreatePostRequest, userID string) (code response.Code, err error)
 }
 
 type Config interface {
