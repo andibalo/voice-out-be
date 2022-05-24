@@ -2,6 +2,8 @@ package config
 
 import (
 	"fmt"
+
+	"github.com/spf13/viper"
 )
 
 type DBConfig struct {
@@ -15,11 +17,11 @@ type DBConfig struct {
 
 func LoadDBConfig() *DBConfig {
 	return &DBConfig{
-		User:       "postgres",
-		DbPassword: "local",
-		DbName:     "voiceout",
-		Host:       "0.0.0.0",
-		Port:       "5432",
+		User:       viper.GetString("DB_USER"),
+		DbPassword: viper.GetString("DB_PASSWORD"),
+		DbName:     viper.GetString("DB_NAME"),
+		Host:       viper.GetString("DB_HOST"),
+		Port:       viper.GetString("DB_PORT"),
 	}
 }
 

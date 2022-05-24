@@ -12,6 +12,7 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/spf13/viper"
 )
 
 type Post struct {
@@ -27,7 +28,7 @@ func NewPostHandler(postService service.PostService) *Post {
 func (h *Post) AddRoutes(e *echo.Echo) {
 	r := e.Group(constants.V1BasePath + constants.PostAPIPath)
 
-	r.Use(middleware.JWT([]byte("TEST")))
+	r.Use(middleware.JWT([]byte(viper.GetString("JWT_SECRET"))))
 	r.POST("/", h.createPost)
 	r.GET("/", h.getAllPosts)
 	r.GET(constants.FetchPostsByUserIDAPIPath, h.getAllPostsByUserID)

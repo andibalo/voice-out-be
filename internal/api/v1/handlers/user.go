@@ -11,6 +11,7 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/spf13/viper"
 )
 
 type User struct {
@@ -27,7 +28,7 @@ func NewUserHandler(userService service.UserService) *User {
 func (h *User) AddRoutes(e *echo.Echo) {
 	r := e.Group(constants.V1BasePath + constants.UserAPIPath)
 
-	r.Use(middleware.JWT([]byte("TEST")))
+	r.Use(middleware.JWT([]byte(viper.GetString("JWT_SECRET"))))
 	r.GET(constants.FetchCurrentUserAPIPath, h.getCurrentUser)
 }
 

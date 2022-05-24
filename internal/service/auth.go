@@ -12,6 +12,7 @@ import (
 	"voice-out-be/internal/voerrors"
 
 	"github.com/golang-jwt/jwt"
+	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
 
@@ -132,7 +133,7 @@ func (a *authService) GenerateJWT(name string, email string, userID string) (jwt
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	t, err := token.SignedString([]byte("TEST"))
+	t, err := token.SignedString([]byte(viper.GetString("JWT_SECRET")))
 	if err != nil {
 		a.config.Logger().Error("GenerateJWT: error generating jwt token", zap.Error(err))
 		return "", err
